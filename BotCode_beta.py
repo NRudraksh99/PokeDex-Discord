@@ -118,4 +118,4 @@ async def on_message(message):
     else:
         await message.channel.send(f"Error fetching Pokemon data (status code: {species_response.status_code})")
 
-client.run("MTIwNjEzNDE3Mzc2OTY2MjQ5NQ.G30-sO.IY8FIohBgJteiPm8FYgevc6lfbYLjBhf5xhiBU")
+client.run("{secret token goes here!")
