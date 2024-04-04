@@ -33,7 +33,7 @@ async def get_info_ability(ability:str):
         except Exception:
             print("Error while fetching details....")
 
-async def get_info_item(item):
+async def get_info_item(item:str):
     async with AsyncClient() as ac:
         url = f"https://pokeapi.co/api/v2/item/{item.lower()}/"
         try:
@@ -59,14 +59,15 @@ async def get_info(pokemon_name):
 
 @client.command()
 async def commands(ctx):
-    await ctx.send("""The commands supported by me are:
-- !info <pokemon_name> to view details about a certain pokemon.
-- !show <pokemon_name> to view the default front and rear sprites of a pokemon.
-- !shiny <pokemon_name> to view the shiny sprites of a pokemon.
-- !item <item_name> to view a description of a specified item.
-- !cry <pokemon_name> to get an audio file of the cry of a pokemon.
-- !move <attack_name> to get information regarding a move/attack.
-- !ability <ability_name> to get information regarding any Pokemon ability.
+    await ctx.send("""#The commands supported by me are:
+- `!info <pokemon_name>`: to view details about a certain pokemon.
+- `!show <pokemon_name>`: to view the default front and rear sprites of a pokemon.
+- `!shiny <pokemon_name>`: to view the shiny sprites of a pokemon.
+- `!item <item_name>`: to view a description of a specified item.
+- `!cry <pokemon_name>`: to get an audio file of the cry of a pokemon.
+- `!move <attack_name>`: to get information regarding a move/attack.
+- `!ability <ability_name>`: to get information regarding any Pokemon ability.
+- `!nature <nature_name>`: to get basic information (like stat-changes) about any nature-type.
 """)
 
 @client.command()
@@ -110,6 +111,28 @@ async def download_image(image_url, name):
             print(f"HTTP error while fetching {image_url}: {exc}")
         except Exception as exc:
             print(f"An error occurred while fetching {image_url}: {exc}")
+
+@client.command()
+async def nature(ctx,nature_name:str):
+    try:
+        print(f"Fetching information about {nature_name}.....")
+        async with AsyncClient() as ac:
+            response=await ac.get(f"https://pokeapi.co/api/v2/nature/{nature_name.lower()}/")
+            response.raise_for_status()
+            response=response.json()
+            if response and isinstance(response,dict):
+                await ctx.send(f'''The {nature_name} ability results in the pokemon having:
+- Decreased {response['decreased_stat']['name'].capitalize()} stat
+- Increased {response['increased_stat']['name'].capitalize()} stat
+
+Poke-Treat etc. details:
+Flavor hated by the pokemon of this nature: {response['hates_flavor']['name'].capitalize()}
+Flavor liked by the pokemon of this nature: {response['likes_flavor']['name'].capitalize()}
+''')
+    except HTTPError:
+        await ctx.send(f"No information found for the ability {nature_name}....")
+    except Exception:
+        await ctx.send("Unfortunately..... Some error occurred....")
 
 @client.command()
 async def cry(ctx,pokemon):
@@ -214,4 +237,4 @@ async def item(ctx,item_name:str):
 async def on_ready():
     print(f'Logged in as {client.user}')
 
-client.run("<bot_token_goes_here>")
+client.run("<discord_bot_token>")
