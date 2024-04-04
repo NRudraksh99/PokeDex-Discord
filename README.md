@@ -1,5 +1,7 @@
 # PokeDex-Discord
-Discord bot created using Python that answers to basic command and provides details about pokemon
+Discord bot created using Python that answers to basic command and provides details about pokemon. Uses PokeAPI for fetching required details in .json format and then replies in the Discord chat with the relevant information.
+
+Link to PokeAPI: https://www.pokeapi.co
 
 ## Available Commands:
 
